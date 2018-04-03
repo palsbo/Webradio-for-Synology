@@ -1,5 +1,5 @@
 package="webradio"
-version="1.7"
+version="1.8"
 description="Webradio application. Require Node.js installed."
 arch="noarch"
 distributor="Erik Palsbo"

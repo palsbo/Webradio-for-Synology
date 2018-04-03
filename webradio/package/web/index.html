@@ -17,14 +17,14 @@
         var aud;
         var currentUrl;
 
-
+        /*
         function request(url, callback) {
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = callback.bind(null, xhr);
             xhr.open('GET', url, true);
             xhr.send('');
         }
-
+        */
 
 
         function selecting(obj) {
@@ -55,6 +55,7 @@
                 }
             }
             ws.onmessage = function (data) {
+                console.log(data)
                 var ar = JSON.parse(data);
                 for (id in ar) {
                     switch (id) {
@@ -73,13 +74,17 @@
                             aud.src = ar.url;
                             aud.play();
                             break;
-                        case 'info':
-                            console.log(ar.info)
-                            document.getElementById("info").innerHTML = ar.info;
+                        case 'bitrate':
+                            $("#bitrate").html(ar['bitrate']);
                             break;
-                        case 'title':
-                            console.log(ar.title)
-                            document.getElementById("title").innerHTML = ar.title;
+                        case 'samplerate':
+                            $("#samplerate").html(ar['samplerate']);
+                            break;
+                        case 'channels':
+                            $("#channels").html(ar['channels']);
+                            break;
+                        case 'StreamTitle':
+                            document.getElementById("title").innerHTML = ar.StreamTitle;
                             break;
                     }
                 }
@@ -93,9 +98,21 @@
         <button style="float:right" id="state"></button>
         <h1>Webradio</h1>
         <audio id="aud" src="http://live-icy.gss.dr.dk:80/A/A07H.mp3" controls preload></audio><br />
-        <div style="margin-bottom:10px" id="title"></div>
+        <table style="width:100%">
+            <tr><td style="vertical-align:top;font-weight:bold">Title:</td><td id="title"></td></tr>
+        </table>
+        <table style="width:100%">
+            <tr>
+                <td style="vertical-align:top;font-weight:bold">Bitrate:</td>
+                <td id="bitrate"></td>
+                <td style="vertical-align:top;font-weight:bold">Samplerate:</td>
+                <td id="samplerate"></td>
+                <td style="vertical-align:top;font-weight:bold">Channels:</td>
+                <td id="channels"></td>
+            </tr>
+        </table>
         <div style="margin-bottom:10px" id="info"></div>
-        <select style="width:100%" onchange="selecting(this)" id="prog">
+        <select style="width:100%;font-size:larger" onchange="selecting(this)" id="prog">
             <option value="">select station</option>
             <option value="http://live-icy.gss.dr.dk:8000/A/A18H.mp3">DR Mama</option>
             <option value="http://live-icy.gss.dr.dk:8000/A/A02H.mp3">DR Nyheder</option>
@@ -111,7 +128,7 @@
             <option value="http://live-icy.gss.dr.dk:8000/A/A11H.mp3">DR P4 Sjælland</option>
             <option value="http://live-icy.gss.dr.dk:8000/A/A12H.mp3">DR P4 Syd</option>
             <option value="http://live-icy.gss.dr.dk:8000/A/A13H.mp3">DR P4 Trekanten</option>
-            <option value="http://live-icy.gss.dr.dk:8000/A/A14H.mp">DR P4 Østjylland</option>
+            <option value="http://live-icy.gss.dr.dk:8000/A/A14H.mp3">DR P4 Østjylland</option>
             <option value="http://live-icy.gss.dr.dk:8000/A/A25H.mp3">DR P5</option>
             <option value="http://live-icy.gss.dr.dk:8000/A/A29H.mp3">DR P6 Beat</option>
             <option value="http://live-icy.gss.dr.dk:8000/A/A21H.mp3">DR P7 Mix</option>

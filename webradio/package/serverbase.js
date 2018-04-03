@@ -6,6 +6,7 @@ var app = express()
 var onlist = {};
 var parmlist = {};
 var wssobj;
+var wss;
 
 var _options = {
     doc: '/index.html',
@@ -38,22 +39,26 @@ function handleStream(ar) {
 }
 
 class serverbase {
+    clients() { return wss.clients; }
     constructor(options) {
+        //var wss;
         if (options != undefined) {
             console.log()
             for (var opt in options) {
                 _options[opt] = options[opt];
             }
         }
-        const server = http.createServer(app);
-        var wss;
-        if (!_options.url) wss = new WebSocket.Server({ server });
+    }
+    begin() {
+    const server = http.createServer(app);
+        var tempopt;
+        if (!_options.url) tempopt = { server };
         else {
             var ar = _options.url.split(':');
             console.log(ar);
-            wss = new WebSocket.Server({ server: ar[0], port: ar[1]});
+            tempopt = { server: ar[0], port: ar[1]};
         }
-        wssobj = wss;
+        wss = new WebSocket.Server(tempopt);
         wss.on('connection', function connection(ws, req) {
             handleStream({ 'connect': ws })
             ws.on('message', function incoming(data) {
@@ -73,8 +78,8 @@ class serverbase {
         parmlist[id] = func;
     }
 
-    broadcast (data) {
-        wssobj.clients.forEach(function each(client) {
+    broadcast(data) {
+        wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
                 client.send(data);
             }
