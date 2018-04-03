@@ -10,7 +10,7 @@ When the server receive a stream url, it is broadcasted using Websocket as a JSO
 
 	{ 'url' : '<http://livestreame.com>' }
 
-	The server also broadcasts the following information:
+The server also broadcasts the following information:
 -	StreamTitle
 -	samplerate
 -	britrate
