@@ -15,9 +15,13 @@
  * if I2S DAC module is not used, use  #include "AudioOutputI2SNoDAC.h" to get sound from pin RX on ESP8266
  */
 #endif
-#include <ESP8266WiFi.h>
+#ifdef ESP32
+    #include <WiFi.h>
+#else
+    #include <ESP8266WiFi.h>
+#endif
+//#include <WiFi.h>       //  ESP32
 #include "sock.h"
-#include <init.h>
 
 /*  Configuration values to be filled in as needed  */
 #define SSID  "..";
@@ -97,7 +101,7 @@ void setup() {
 
   file = new AudioFileSourceICYStream();
   file->RegisterMetadataCB(MDCallback, (void*)"ICY");
-  buff = new AudioFileSourceBuffer(file, 2048);
+  buff = new AudioFileSourceBuffer(file, 4096);
   buff->RegisterStatusCB(StatusCallback, (void*)"buffer");
   mp3 = new AudioGeneratorMP3();
   mp3->RegisterStatusCB(StatusCallback, (void*)"mp3");
