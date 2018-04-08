@@ -24,11 +24,11 @@ The client can be used as a webradio and for selecting stations.
 Using a ESP8266 as a listener, it can be connected to an amplifier for mono (Pin RX). 
 By adding a I2S DAC module, the quality improves and the module can provide stereo.
 
-	ESP pin   - I2S signal	ESP32	Wemos-D1
+	I2S signal	ESP8266	ESP32	Wemos-D1
 	----------------------------------------------
-	GPIO2/TX1   - LRCK	GPIO25	D4		Rød
-	GPIO3/RX0   - DATA	GPIO22	RX0		Orange
-	GPIO15      - BCLK	GPIO26	D8		Gul
+	LRCK	GPIO2/TX1	GPIO25	D4	Rød
+	DATA	GPIO3/RX0	GPIO22	RX0	Orange
+	BCLK	GPIO15	GPIO26	D8	Gul
 
 
 
