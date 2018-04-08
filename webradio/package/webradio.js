@@ -17,7 +17,8 @@
     
 */
 const serverbase = require("./serverbase");
-const radio = require("radio-stream");
+//const radio = require("radio-stream");
+var radio = require('node-internet-radio');
 
 var ww = new serverbase({ port: 81, dir: __dirname + '/web' });
 
@@ -45,6 +46,20 @@ function toar(s) {
     return ar2;
 }
 
+var stream;
+setInterval(function() {
+    radio.getStationInfo(currentUrl, function(error, station) {
+	//console.log(station);
+	var ar = {};
+	ar.title = station.title;
+	ar.bitrate = station.headers['icy-br'];
+	ar.genre = station.headers['icy-genre'];
+	ar.name = station.headers['icy-name'];
+	ww.broadcast(JSON.stringify(ar));
+	//console.log(ar);
+    }, radio.StreamSource.STREAM);
+},2000);
+
 function bcurl(data) {
     currentUrl = data;
     console.log("Now broadcasting url:", currentUrl);
@@ -53,7 +68,9 @@ function bcurl(data) {
     for (key in myInfo) myInfo[key] = '';
     ww.broadcast(JSON.stringify(ar));
     ww.broadcast(JSON.stringify(myInfo));
-    var stream = new radio.createReadStream(currentUrl)
+    /*
+    delete stream;
+    stream = new radio.createReadStream(currentUrl)
     stream.on("error", function () {
         console.log("Ups! - Stream error");
     })
@@ -68,6 +85,7 @@ function bcurl(data) {
             ww.broadcast(JSON.stringify(myInfo));
         });
     });
+    */
 }
 
 ww.begin();

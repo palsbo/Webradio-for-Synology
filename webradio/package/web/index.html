@@ -77,14 +77,14 @@
                         case 'bitrate':
                             $("#bitrate").html(ar['bitrate']);
                             break;
-                        case 'samplerate':
-                            $("#samplerate").html(ar['samplerate']);
+                        case 'genre':
+                            $("#genre").html(ar['genre']);
                             break;
-                        case 'channels':
-                            $("#channels").html(ar['channels']);
+                        case 'name':
+                            $("#name").html(ar['name']);
                             break;
-                        case 'StreamTitle':
-                            document.getElementById("title").innerHTML = ar.StreamTitle;
+                        case 'title':
+                            document.getElementById("title").innerHTML = ar.title;
                             break;
                     }
                 }
@@ -103,12 +103,12 @@
         </table>
         <table style="width:100%">
             <tr>
-                <td style="vertical-align:top;font-weight:bold">Bitrate:</td>
+                <td style="vertical-align:top;font-weight:bold">Station:</td>
+                <td id="name"></td>
+                <td style="vertical-align:top;font-weight:bold">Genre:</td>
+                <td id="genre"></td>
+                <td style="vertical-align:top;font-weight:bold">Bitrate::</td>
                 <td id="bitrate"></td>
-                <td style="vertical-align:top;font-weight:bold">Samplerate:</td>
-                <td id="samplerate"></td>
-                <td style="vertical-align:top;font-weight:bold">Channels:</td>
-                <td id="channels"></td>
             </tr>
         </table>
         <div style="margin-bottom:10px" id="info"></div>
