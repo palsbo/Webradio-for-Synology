@@ -26,9 +26,9 @@ By adding a I2S DAC module, the quality improves and the module can provide ster
 
 	I2S signal	ESP8266	ESP32	Wemos-D1
 	----------------------------------------------
-	LRCK	GPIO2/TX1	GPIO25	D4	Rød
-	DATA	GPIO3/RX0	GPIO22	RX0	Orange
-	BCLK	GPIO15	GPIO26	D8	Gul
+	LRCK		GPIO2/TX1	GPIO25	D4	Rød
+	DATA		GPIO3/RX0	GPIO22	RX0	Orange
+	BCLK		GPIO15		GPIO26	D8	Gul
 
 
 
