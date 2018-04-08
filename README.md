@@ -25,10 +25,10 @@ Using a ESP8266 as a listener, it can be connected to an amplifier for mono (Pin
 By adding a I2S DAC module, the quality improves and the module can provide stereo.
 
 	I2S signal	ESP8266		Wemos-D1	ESP32
-	------------------------------------------------
-	LRCK		GPIO2/TX1	D4			GPIO25		(Rød)
-	DATA		GPIO3/RX0	RX0			GPIO22		(Orange)
-	BCLK		GPIO15		D8			GPIO26		(Gul)
+	------------------------------------------------------
+	LRCK		GPIO2/TX1	D4		GPIO25		(Rød)
+	DATA		GPIO3/RX0	RX0		GPIO22		(Orange)
+	BCLK		GPIO15		D8		GPIO26		(Gul)
 
 
 
