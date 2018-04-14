@@ -4,12 +4,15 @@
 */
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
 const int preallocateBufferSize = 5 * 1024;
 const int preallocateCodecSize = 29192; // MP3 codec max mem needed
+ESP8266WebServer 
 #else
 #include <WiFi.h>
 const int preallocateBufferSize = 26 * 1024;
 const int preallocateCodecSize = 85332; // AAC+SBR codec max mem needed
+WiFiServer server(80);
 #endif
 #include "sock.h"
 #define DAC   //  uncomment if I2S DAC module is used
@@ -39,7 +42,7 @@ const int preallocateCodecSize = 85332; // AAC+SBR codec max mem needed
 
 #include <init.h> //  I use this library file to redefine the configuration values - remove if config data are defined abowe
 
-int   volume = 100;
+int   volume = 10;
 bool  newUrl = false;
 int   retryms = 0;
 void  *preallocateBuffer = NULL;
@@ -76,6 +79,7 @@ void stopPlay() {
     delete file;
     file = NULL;
   }
+  delay(2000);
 }
 
 void startPlay() {
@@ -91,6 +95,7 @@ void startPlay() {
 void setup() {
   Serial.begin(115200);
   delay(100);
+  Serial.printf("%s, %s\n",ssid, pass);
   Serial.println("Connecting to WiFi");
   WiFi.disconnect();
   WiFi.softAPdisconnect(true);

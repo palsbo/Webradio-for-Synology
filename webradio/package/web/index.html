@@ -98,19 +98,6 @@
         <button style="float:right" id="state"></button>
         <h1>Webradio</h1>
         <audio id="aud" src="http://live-icy.gss.dr.dk:80/A/A07H.mp3" controls preload></audio><br />
-        <table style="width:100%">
-            <tr><td style="vertical-align:top;font-weight:bold">Title:</td><td id="title"></td></tr>
-        </table>
-        <table style="width:100%">
-            <tr>
-                <td style="vertical-align:top;font-weight:bold">Station:</td>
-                <td id="name"></td>
-                <td style="vertical-align:top;font-weight:bold">Genre:</td>
-                <td id="genre"></td>
-                <td style="vertical-align:top;font-weight:bold">Bitrate::</td>
-                <td id="bitrate"></td>
-            </tr>
-        </table>
         <div style="margin-bottom:10px" id="info"></div>
         <select style="width:100%;font-size:larger" onchange="selecting(this)" id="prog">
             <option value="">select station</option>
@@ -140,10 +127,24 @@
             <option value="http://onair.100fmlive.dk:80/100fm_live.mp3">Radio 100 FM</option>
             <option value="http://89.184.153.12:8000/radiocharlie.mp3">Radio Charlie</option>
             <option value="http://195.184.101.203/voice128">The Voice</option>
-            <option value="http://stream128.retro-radio.dk/retro">Retro</option>
             <option value="http://streammp3.retro-radio.dk/retro-mp3?type=.mp3">Retro-radio</option>
             <option value="http://tx-2.retro-radio.dk/TX-2?type=.mp3">Retro Millenium</option>
         </select>
+        <table style="width:100%">
+            <tr><td style="vertical-align:top;font-weight:bold">Title:</td><td id="title"></td></tr>
+        </table>
+        <table style="width:100%">
+            <tr>
+                <td style="vertical-align:top;font-weight:bold">Station:</td>
+                <td style="vertical-align:top;font-weight:bold">Genre:</td>
+                <td style="vertical-align:top;font-weight:bold">Bitrate::</td>
+            </tr>
+            <tr>
+                <td id="name"></td>
+                <td id="genre"></td>
+                <td id="bitrate"></td>
+            </tr>
+        </table>
     </div>
 </body>
 </html>

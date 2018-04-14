@@ -23,7 +23,6 @@ var radio = require('node-internet-radio');
 var ww = new serverbase({ port: 81, dir: __dirname + '/web' });
 
 var currentUrl = "";
-var myInfo = {};
 
 String.prototype.replaceall = function (a, b) {
     var s = this;
@@ -31,23 +30,8 @@ String.prototype.replaceall = function (a, b) {
     return s;
 }
 
-function toar(s) {
-    s = s.replaceall('\u0000', '').replaceall('\x0D\x0A','').replaceall('x27','');
-    if (s.substr(s.length - 1) == ";") s = s.substr(0, s.length - 1);
-    var ar = s.split(";");
-    var ar2 = {};
-    for (i in ar) {
-        var pair = ar[i].split("=");
-        var val = String(pair[1]);
-        if (val[0] == "'") val = val.substr(1);
-        if (val[val.length - 1] == "'") val = val.substr(0, val.length - 1);
-        ar2[pair[0]] = val;
-    }
-    return ar2;
-}
-
-var stream;
 setInterval(function() {
+    try {
     radio.getStationInfo(currentUrl, function(error, station) {
 	//console.log(station);
 	var ar = {};
@@ -56,36 +40,17 @@ setInterval(function() {
 	ar.genre = station.headers['icy-genre'];
 	ar.name = station.headers['icy-name'];
 	ww.broadcast(JSON.stringify(ar));
-	//console.log(ar);
+	console.log(ar);
     }, radio.StreamSource.STREAM);
-},2000);
+    } catch (error) {};
+},5000);
 
-function bcurl(data) {
+function newUrl(data) {
     currentUrl = data;
     console.log("Now broadcasting url:", currentUrl);
     var ar = {};
     ar['url'] = currentUrl;
-    for (key in myInfo) myInfo[key] = '';
     ww.broadcast(JSON.stringify(ar));
-    ww.broadcast(JSON.stringify(myInfo));
-    /*
-    delete stream;
-    stream = new radio.createReadStream(currentUrl)
-    stream.on("error", function () {
-        console.log("Ups! - Stream error");
-    })
-    stream.on("connect", function () {
-        var s = stream.headers['ice-audio-info'].replaceall('ice-', '');
-        var ar = toar(s);
-        for (key in ar) myInfo[key] = ar[key];
-        ww.broadcast(JSON.stringify(myInfo));
-        stream.on("metadata", function (title) {
-            var ar = toar(title);
-            for (key in ar) myInfo[key] = ar[key];
-            ww.broadcast(JSON.stringify(myInfo));
-        });
-    });
-    */
 }
 
 ww.begin();
@@ -93,7 +58,7 @@ ww.onparm('url', function (doc, data) {     //  action if url contains parameter
     console.log("Value of parmeter 'url' in page '%s' is '%s'", doc, data);
 })
 
-ww.on('url', bcurl);    //  action if websocket receives 'url' parameter.
+ww.on('url', newUrl);    //  action if websocket receives 'url' parameter.
 
 ww.on('ping', function (data) {
     console.log("ping");
@@ -104,10 +69,9 @@ ww.on('connect', function (ws) {    //  action when a web-client is connected. t
     var ar = {};
     ar['url'] = currentUrl;
     ws.send(JSON.stringify(ar));
-    ws.send(JSON.stringify(myInfo));
 })
 
 ww.on('listen', function (webport) {   //  action when web-server start to listen.
     console.log('Listening on port %s', webport);
-    bcurl("http://streammp3.retro-radio.dk/retro-mp3?type=.mp3");
+    newUrl("http://streammp3.retro-radio.dk/retro-mp3?type=.mp3");
 })
