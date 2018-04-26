@@ -5,7 +5,7 @@ PACKAGE="webradio"
 DNAME="webradio"
 #WDIR=/var/services/web/$PACKAGE
 TDIR=${SYNOPKG_PKGDEST}
-PGM=$TDIR/webradio.js
+PGM=$TDIR/server.js
 
 # Others
 

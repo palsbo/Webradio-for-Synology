@@ -5,74 +5,45 @@
     <meta charset="utf-8" />
     <title>Webradio</title>
     <meta name="viewport" content="width=device-width">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/simple-slider.min.js"></script>
+    <link href="css/simple-slider.css" rel="stylesheet" type="text/css" />
     <!--
         Using the module 'websocket.js' gives auto-connect if server disconnect.
         register the websocket object as this:
-        var ws = new WEBSOCKET(url)
+        const ws = new WEBSOCKET(url)
     -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="websocket.js"></script>
     <script type="text/javascript">
         wsurl = 'ws://' + window.location.hostname + ':81';
-        var aud;
+        const ws = new WEBSOCKET(wsurl);
         var currentUrl;
-
-        /*
-        function request(url, callback) {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = callback.bind(null, xhr);
-            xhr.open('GET', url, true);
-            xhr.send('');
-        }
-        */
-
 
         function selecting(obj) {
             var ar = { 'url': obj.value };
             if (socket) socket.send(JSON.stringify(ar));
         }
 
-        var ws = new WEBSOCKET(wsurl);
-
-        function progress(oEvent) {
-            console.log("here")
-        }
-
-
         $(function () {
-            aud = document.getElementById("aud");
             ws.onstatus = function (stat) {
-                obj = document.getElementById("state");
-                obj.style.color = "white"
+                $("#state").css("color", "white");
                 if (stat) {
-                    console.log("Connection open");
-                    obj.innerHTML = "Online";
-                    obj.style.backgroundColor = "green"
+                    $("#state").html("Online").css("background-color", "green");
                 } else {
-                    console.log("Connection closed");
-                    obj.innerHTML = "Offline";
-                    obj.style.backgroundColor = "red"
+                    $("#state").html("Offline").css("background-color", "red");
                 }
             }
             ws.onmessage = function (data) {
-                console.log(data)
                 var ar = JSON.parse(data);
                 for (id in ar) {
                     switch (id) {
+                        case 'gain':
+                            $("[data-slider]").simpleSlider("setValue", ar.gain/100);
+                            break;
                         case 'url':
                             currentUrl = ar.url;
-                            /*
-                            request(currentUrl, function (data) {
-                                if (data.responseType != "") {
-                                    //console.log(data)
-                                    document.getElementById("info").innerHTML = data.responseType;
-                                }
-                            });
-                            */
-                            document.getElementById("prog").value = ar.url;
-                            console.log("Got: ", ar.url);
-                            aud.src = ar.url;
-                            aud.play();
+                            $("#prog").val(ar.url);
+                            $("#aud").attr("src", ar.url).trigger("play");
                             break;
                         case 'bitrate':
                             $("#bitrate").html(ar['bitrate']);
@@ -84,12 +55,21 @@
                             $("#name").html(ar['name']);
                             break;
                         case 'title':
-                            document.getElementById("title").innerHTML = ar.title;
+                            $("#title").html(ar.title);
                             break;
                     }
                 }
             }
             ws.begin();
+            document.getElementById("aud").addEventListener('volumechange', function () {
+                console.log('changed.', Math.round(this.volume * 100));
+            }, false);
+            $("#vol").bind("slider:ready slider:changed", function (event, data) {
+                    var ar = {};
+                    ar['gain'] = Math.round(data.value * 100);
+                    if (socket) socket.send(JSON.stringify(ar));
+                });
+
         });
     </script>
 </head>
@@ -97,7 +77,9 @@
     <div style="margin:auto;width:320px">
         <button style="float:right" id="state"></button>
         <h1>Webradio</h1>
-        <audio id="aud" src="http://live-icy.gss.dr.dk:80/A/A07H.mp3" controls preload></audio><br />
+        <h4>Client volume</h4>
+        <input id="vol" style="width:100%" type="text" data-slider="true" value="0.8" data-slider-highlight="true">
+        <audio id="aud" style="width:100%" src="http://live-icy.gss.dr.dk:80/A/A07H.mp3" controls preload></audio><br />
         <div style="margin-bottom:10px" id="info"></div>
         <select style="width:100%;font-size:larger" onchange="selecting(this)" id="prog">
             <option value="">select station</option>

@@ -4,15 +4,12 @@
 */
 #ifdef ESP8266
 #include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
 const int preallocateBufferSize = 5 * 1024;
 const int preallocateCodecSize = 29192; // MP3 codec max mem needed
-ESP8266WebServer 
 #else
 #include <WiFi.h>
 const int preallocateBufferSize = 26 * 1024;
 const int preallocateCodecSize = 85332; // AAC+SBR codec max mem needed
-WiFiServer server(80);
 #endif
 #include "sock.h"
 #define DAC   //  uncomment if I2S DAC module is used
@@ -21,28 +18,23 @@ WiFiServer server(80);
 #include "AudioFileSourceBuffer.h"
 #include "AudioGeneratorMP3.h"
 #include "AudioGeneratorAAC.h"
-#include "AudioOutputI2S.h"
+//#include "AudioOutputI2S.h"
 #include "AudioOutputI2SNoDAC.h"
 
-#define AUDIOOUTPUT AudioOutputI2S
+#define AUDIOOUTPUT AudioOutputI2SNoDAC
 #define AUDIOGENERATOR  AudioGeneratorMP3
 #define AUDIOSOURCE AudioFileSourceHTTPStream
 #define AUDIOBUFFER AudioFileSourceBuffer
 
 /*  Configuration values to be filled in as needed  */
-#define SSID  "..";
-#define PASS  "..";
-#define WSHOST  "..";
+#define SSID  "palsbo";
+#define PASS  "fedusmus";
+#define WSHOST  "192.168.1.75";
 #define WSPORT  81;
-#define MQTT_CLIENT ESP.getChipId()
-#define MQTT_SERVER "...";
-#define MQTT_PORT 17332;
-#define MQTT_USER "...";
-#define MQTT_PASS "..";
 
-#include <init.h> //  I use this library file to redefine the configuration values - remove if config data are defined abowe
+//#include <init.h> //  I use this library file to redefine the configuration values - remove if config data are defined abowe
 
-int   volume = 10;
+int   volume = 100;
 bool  newUrl = false;
 int   retryms = 0;
 void  *preallocateBuffer = NULL;
@@ -79,14 +71,13 @@ void stopPlay() {
     delete file;
     file = NULL;
   }
-  delay(2000);
 }
 
 void startPlay() {
   file = new AUDIOSOURCE(URL);
   buff = new AUDIOBUFFER(file, preallocateBuffer, preallocateBufferSize);
   decoder = new AUDIOGENERATOR(preallocateCodec, preallocateCodecSize);
-  Serial.printf_P("Decoder start...\n");
+  Serial.printf_P("Decoder start...%s\n", URL);
   decoder->begin(buff, out);
   out->SetGain(((float)volume) / 100.0);
   newUrl = false;
@@ -95,7 +86,6 @@ void startPlay() {
 void setup() {
   Serial.begin(115200);
   delay(100);
-  Serial.printf("%s, %s\n",ssid, pass);
   Serial.println("Connecting to WiFi");
   WiFi.disconnect();
   WiFi.softAPdisconnect(true);
